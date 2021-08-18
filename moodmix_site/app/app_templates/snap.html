@@ -1,0 +1,183 @@
+{% extends 'index.html'%}
+
+{% block content %}
+<nav class="ct-nav">
+
+  <div>
+    <ul id="horizontal-list" style="list-style-type:none;">
+
+      {% if current_user.is_authenticated %}
+
+
+      <a href="{{ url_for('mm.logout') }}">
+        <li><button class="btn btn-outline-primary btn-sm">Log Out</button></li>
+      </a>
+
+
+      {% endif %}
+
+    </ul>
+  </div>
+
+
+</nav>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div id="letty">
+  <p>Let's take your photo!</p>
+</div>
+
+
+<div id="cammy">
+
+  <button type="button" class="btn btn-outline-primary btn-sm" data-toggle="modal"
+    data-target=".bd-example-modal-lg">Reveal Camera</button>
+
+  <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <video autoplay></video>
+        <input type="range" hidden>
+
+        <div id="takey">
+          <canvas id='takePhotoCanvas'></canvas>
+          
+            <button id='takePhotoButton' disabled class="btn btn-primary ">Take Photo</button>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  var imageCapture;
+
+  navigator.mediaDevices.getUserMedia({ video: true })
+    .then(async mediaStream => {
+      document.querySelector('video').srcObject = mediaStream;
+
+      // Once crbug.com/711524 is fixed, we won't need to wait anymore. This is
+      // currently needed because capabilities can only be retrieved after the
+      // device starts streaming. This happens after and asynchronously w.r.t.
+      // getUserMedia() returns.
+      await sleep(1000);
+
+      const track = mediaStream.getVideoTracks()[0];
+      imageCapture = new ImageCapture(track);
+      const capabilities = track.getCapabilities();
+      const settings = track.getSettings();
+
+      const input = document.querySelector('input[type="range"]');
+
+      // Check whether zoom is supported or not.
+      if (!('zoom' in capabilities)) {
+        return Promise.reject('Zoom is not supported by ' + track.label);
+      }
+
+      // Map zoom to a slider element.
+      input.min = capabilities.zoom.min;
+      input.max = capabilities.zoom.max;
+      input.step = capabilities.zoom.step;
+      input.value = settings.zoom;
+      console.log(capabilities.zoom);
+      input.oninput = function (event) {
+        track.applyConstraints({ advanced: [{ zoom: event.target.value }] });
+      }
+      input.hidden = false;
+    })
+    .catch(error => ChromeSamples.log('Argh!', error.name || error));
+
+  /* Utils */
+
+  function sleep(ms = 0) {
+    return new Promise(r => setTimeout(r, ms));
+  }
+
+  function onTakePhotoButtonClick() {
+    imageCapture.takePhoto()
+      .then(blob => createImageBitmap(blob))
+      .then(imageBitmap => {
+        const canvas = document.querySelector('#takePhotoCanvas');
+        drawCanvas(canvas, imageBitmap);
+        var canvas2 = document.getElementById("takePhotoCanvas");
+        var img = canvas2.toDataURL("image/jpeg").replace("image/jpeg", "image/octet-stream");
+        // document.getElementById('plzplz').innerHTML = '<img src="' + img + '">'
+        window.location.href = img;
+
+      })
+      .catch(error => console.error(error));
+  }
+
+  function drawCanvas(canvas, img) {
+    canvas.width = getComputedStyle(canvas).width.split('px')[0];
+    canvas.height = getComputedStyle(canvas).height.split('px')[0];
+    let ratio = Math.min(canvas.width / img.width, canvas.height / img.height);
+    let x = (canvas.width - img.width * ratio) / 2;
+    let y = (canvas.height - img.height * ratio) / 2;
+    canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+    canvas.getContext('2d').drawImage(img, 0, 0, img.width, img.height,
+      x, y, img.width * ratio, img.height * ratio);
+  }
+
+  document.querySelector('#takePhotoButton').addEventListener('click', onTakePhotoButtonClick);
+
+  document.querySelector('video').addEventListener('play', function () {
+    document.querySelector('#takePhotoButton').disabled = false;
+
+  });
+
+// var canvas = document.getElementById("takePhotoCanvas");
+// // var img    = canvas.toDataURL("image/png");
+// var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");  // here is the most important part because if you dont replace you will get a DOM 18 exception.
+// // console.log(img)
+// // document.getElementById('plzplz').innerHTML = '<img src="' + img + '">'
+// // window.location.href=image; // it will save locally
+
+</script>
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+
+
+
+<div id="snappy">
+
+  <a href="{{ url_for('mm.upload') }}">
+    <button class="btn btn-primary ">Continue to Next Step</button>
+  </a>
+
+</div>
+
+
+
+
+
+
+
+
+<script src="static/js/jquery-3.3.1.min.js"></script>
+<script src="static/js/popper.min.js"></script>
+<script src="static/js/bootstrap.min.js"></script>
+<script src="static/js/main.js"></script>
+
+
+
+{% endblock content %}

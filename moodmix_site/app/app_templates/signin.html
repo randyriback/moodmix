@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<div class="container">
+
+    {% with messages = get_flashed_messages(with_categories = true) %}
+
+        {% if messages %}
+           
+            {% for cat, msg in messages %}
+               
+                {% if cat == 'auth-success' %}
+
+                <div class="alert alert-primary alert-dismissible fade show">
+                    {{ msg }}
+                <button class = "close" data-dismiss = "alert">&times;</button>
+                </div>
+
+                {% endif %}
+
+
+            {% endfor %}
+ 
+        {% endif %}    
+
+    {% endwith %}
+
+</div>
+<div class="container">
+
+    {% with messages = get_flashed_messages(with_categories = true) %}
+
+        {% if messages %}
+           
+            {% for cat, msg in messages %}
+               
+                {% if cat == 'auth-failed' %}
+
+                <div class="alert alert-warning alert-dismissible fade show">
+                    {{ msg }}
+                <button class = "close" data-dismiss = "alert">&times;</button>
+                </div>
+
+                {% endif %}
+
+
+            {% endfor %}
+ 
+        {% endif %}    
+
+    {% endwith %}
+
+</div>
+
+<div id="sin">
+    <div class="content">
+        <div class="icontainer">
+        <div class="irow">
+            <div class="col-md- contents">
+                <div class="col-md-">
+                <p>Welcome back!</p>
+        
+                {% include 'forms.html' %}
+                
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="static/js/jquery-3.3.1.min.js"></script>
+<script src="static/js/popper.min.js"></script>
+<script src="static/js/bootstrap.min.js"></script>
+<script src="static/js/main.js"></script>
+{% endblock content %}  

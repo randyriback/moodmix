@@ -1,0 +1,88 @@
+{% extends 'index.html'%}
+
+{% block content %}
+<nav class="ct-nav">
+       
+    <div>
+        <ul id="horizontal-list" style="list-style-type:none;">
+            
+            {% if current_user.is_authenticated %}
+           
+
+            <a href="{{ url_for('mm.logout') }}">
+                <li><button class="btn btn-outline-primary btn-sm">Log Out</button></li>
+            </a>
+
+
+            {% endif %}
+
+        </ul>
+    </div> 
+        
+    
+</nav> 
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+<div id="uppy">
+<form method='POST' autocomplete="off" enctype="multipart/form-data">
+    <p>Now let's upload your photo...</p>
+    <div>
+        {{ upload_mood_form.hidden_tag() }}
+    </div>
+
+    <div>
+        <input id= "hideme" type="file" name="pic" required/>     
+    </div>
+    <div>
+        {{ upload_mood_form.submit_button(class = 'btn btn-outline-primary btn-sm') }}
+    </div>
+</div>    
+
+
+</form>
+
+<!-- <div>
+  {{ x }}  
+</div> -->
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+
+<!-- <div id="analyze">
+  <a href="{{ url_for('mm.new_data') }}">
+    <button class="btn btn-primary">Analyze Face</button>
+</a>
+</div> -->
+
+
+
+
+<script src="static/js/jquery-3.3.1.min.js"></script>
+<script src="static/js/popper.min.js"></script>
+<script src="static/js/bootstrap.min.js"></script>
+<script src="static/js/main.js"></script>
+
+
+
+{% endblock content %}
