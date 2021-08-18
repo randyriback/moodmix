@@ -26,7 +26,7 @@ def secret():
 
 
 
-
+3
 @mm.route('/snap')
 @login_required
 def snap():

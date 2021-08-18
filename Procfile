@@ -1,1 +1,1 @@
-web: gunicorn capstone_site:app --preload --timeout 60
+web: gunicorn moodmix_site:app --preload --timeout 60
