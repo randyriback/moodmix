@@ -8,7 +8,7 @@ Run the following commands to bootstrap your environment:
 
 ```
 git clone https://github.com/randyriback/moodmix
-cd moodmxix
+cd moodxix
 pip install -r requirements.txt
 ```
 
